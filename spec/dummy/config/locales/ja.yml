@@ -1,0 +1,45 @@
+ja:
+  enum_ish:
+    user: &user
+      status:
+        enable: 有効
+        disable: 無効
+      status/short:
+        enable: 有
+        disable: 無
+      str:
+        status1: 文字列１
+        status2: 文字列２
+        status3: 文字列３
+      str/short:
+        status1: 文１
+        status2: 文２
+        status3: 文３
+      int:
+        0: 整数0
+        1: 整数1
+        2: 整数2
+      flt:
+        0.5: 0.5倍
+        1.0: 1倍
+        2.0: 2倍
+      bool:
+        true: 真
+        false: 偽
+      aliased_str:
+        status1: 文字列１
+        status2: 文字列２
+        status3: 文字列３
+      aliased_flt:
+        half: 0.5倍
+        one: 1倍
+        double: 2倍
+      aliased_int:
+        zero: 整数0
+        one: 整数1
+        two: 整数2
+      aliased_bool:
+        true: 真
+        false: 偽
+    user_model:
+      <<: *user
