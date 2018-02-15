@@ -12,6 +12,9 @@ module EnumIsh
       }.to_h
     end
 
+    config[:text] = true unless config.key?(:text)
+    config[:options] = true unless config.key?(:options)
+
     Builder.build(self, attr, enum, config)
   end
 end
