@@ -1,6 +1,7 @@
 require 'active_support'
 require 'enum_ish/version'
 require 'enum_ish/builder'
+require 'enum_ish/builder/active_record' if defined?(ActiveRecord::Base)
 
 module EnumIsh
   def enum_ish(attr, enum, config = {})
@@ -8,6 +9,10 @@ module EnumIsh
       config[key] = true unless config.key?(key)
     end
 
-    Builder.new(self).build(attr, enum, config)
+    if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
+      Builder::ActiveRecord.new(self).build(attr, enum, config)
+    else
+      Builder.new(self).build(attr, enum, config)
+    end
   end
 end
