@@ -35,9 +35,10 @@ Then define i18n translations (example below shows japanese translations):
 
 ```yaml
 ja:
-  user:
-    enable: 有効
-    disable: 無効
+  enum_ish:
+    user:
+      enable: 有効
+      disable: 無効
 ```
 
 Enum-like methods are generated as follows:
@@ -55,13 +56,14 @@ Define additional translations:
 
 ```yaml
 ja:
-  user:
-    status:
-      enable: 有効
-      disable: 無効
-    status/short:
-      enable: 有
-      disable: 無
+  enum_ish:
+    user:
+      status:
+        enable: 有効
+        disable: 無効
+      status/short:
+        enable: 有
+        disable: 無
 ```
 
 ```ruby
@@ -140,7 +142,7 @@ Generate validation:
 ```ruby
 class User < ActiveRecord::Base
   extend EnumIsh
-  enum_ish :status, ['enable', 'disable'], validation: true
+  enum_ish :status, ['enable', 'disable'], validate: true
 end
 
 user = User.new
