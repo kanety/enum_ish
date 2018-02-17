@@ -4,17 +4,10 @@ require 'enum_ish/builder'
 
 module EnumIsh
   def enum_ish(attr, enum, config = {})
-    if enum.is_a?(Array)
-      enum = enum.map { |v|
-        k = v.to_s.to_sym
-        v = v.to_s if v.is_a?(Symbol)
-        [k, v]
-      }.to_h
+    [:text, :options].each do |key|
+      config[key] = true unless config.key?(key)
     end
 
-    config[:text] = true unless config.key?(:text)
-    config[:options] = true unless config.key?(:options)
-
-    Builder.build(self, attr, enum, config)
+    Builder.new(self).build(attr, enum, config)
   end
 end

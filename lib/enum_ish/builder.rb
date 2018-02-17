@@ -1,170 +1,182 @@
 module EnumIsh
   class Builder
-    class << self
-      def build(klass, attr, enum, config = {})
-        if config[:text]
-          define_text(klass, attr, enum, config)
-        end
+    def initialize(klass)
+      @klass = klass
+    end
 
-        if config[:options]
-          define_options(klass, attr, enum, config)
-        end
+    def build(attr, enum, config = {})
+      if enum.is_a?(Array)
+        enum = enum.map { |v|
+          k = v.to_s.to_sym
+          v = v.to_s if v.is_a?(Symbol)
+          [k, v]
+        }.to_h
+      end
 
-        if config.key?(:default)
-          if klass.ancestors.include?(ActiveRecord::Base)
-            define_default_value_for_ar(klass, attr, enum, config)
-          else
-            define_default_value(klass, attr, enum, config)
-          end
-        end
+      if config[:text]
+        define_text(attr, enum, config)
+      end
 
-        if config[:predicate]
-          define_predicate(klass, attr, enum, config)
-        end
+      if config[:options]
+        define_options(attr, enum, config)
+      end
 
-        if config[:accessor]
-          if klass.ancestors.include?(ActiveRecord::Base)
-            define_accessor_for_ar(klass, attr, enum, config)
-          else
-            define_accessor(klass, attr, enum, config)
-          end
-        end
-
-        if config[:validate]
-          define_validate(klass, attr, enum, config)
-        end
-
-        if config[:scope]
-          define_scope(klass, attr, enum, config)
+      if config.key?(:default)
+        if @klass.ancestors.include?(ActiveRecord::Base)
+          define_default_value_for_ar(attr, enum, config)
+        else
+          define_default_value(attr, enum, config)
         end
       end
 
-      private
-
-      def define_text(klass, attr, enum, config)
-        method = "#{attr}_text"
-
-        klass.class_eval do
-          define_method method do |options = {}|
-            value = public_send(attr)
-            dic = EnumIsh::Dictionary.load(klass, attr, enum, config, options)
-            dic[value] || value
-          end
-        end        
+      if config[:predicate]
+        define_predicate(attr, enum, config)
       end
 
-      def define_options(klass, attr, enum, config)
-        method = "#{attr}_options"
-
-        klass.class_eval do
-          define_singleton_method method do |options = {}|
-            dic = EnumIsh::Dictionary.load(klass, attr, enum, config, options)
-            dic.invert.to_a
-          end
+      if config[:accessor]
+        if @klass.ancestors.include?(ActiveRecord::Base)
+          define_accessor_for_ar(attr, enum, config)
+        else
+          define_accessor(attr, enum, config)
         end
       end
 
-      def define_predicate(klass, attr, enum, config)
-        enum.each do |key, value|
-          method = "#{attr}_#{key}?".tr('.', '_')
-          klass.class_eval do
-            define_method method do
-              public_send(attr) == value
-            end
-          end
-        end
+      if config[:validate]
+        define_validate(attr, enum, config)
       end
 
-      def define_default_value(klass, attr, enum, config)
-        mod = Module.new
-        mod.module_eval do
-          define_method :initialize do |*args|
-            public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
-            super(*args)
-          end
-        end
-        klass.prepend mod
+      if config[:scope]
+        define_scope(attr, enum, config)
       end
+    end
 
-      def define_default_value_for_ar(klass, attr, enum, config)
-        method = "_enum_ish_init_#{attr}".to_sym
+    private
 
-        klass.class_eval do
-          after_initialize method
+    def define_text(attr, enum, config)
+      method = "#{attr}_text"
+
+      @klass.class_eval do
+        define_method method do |options = {}|
+          value = public_send(attr)
+          dic = EnumIsh::Dictionary.new(self.class).load(attr, enum, config, options)
+          dic[value] || value
+        end
+      end        
+    end
+
+    def define_options(attr, enum, config)
+      method = "#{attr}_options"
+
+      @klass.class_eval do
+        define_singleton_method method do |options = {}|
+          dic = EnumIsh::Dictionary.new(self).load(attr, enum, config, options)
+          dic.invert.to_a
+        end
+      end
+    end
+
+    def define_predicate(attr, enum, config)
+      enum.each do |key, value|
+        method = "#{attr}_#{key}?".tr('.', '_')
+        @klass.class_eval do
           define_method method do
-            public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
+            public_send(attr) == value
           end
         end
       end
+    end
 
-      def define_accessor(klass, attr, enum, config)
-        method = "#{attr}_raw"
-
-        klass.class_eval do
-          define_method method do
-            instance_variable_get("@#{attr}")
-          end
-          define_method "#{attr}" do
-            enum.invert[instance_variable_get("@#{attr}")]
-          end
-          define_method "#{attr}=" do |value|
-            instance_variable_set("@#{attr}", enum[value])
-          end
+    def define_default_value(attr, enum, config)
+      mod = Module.new
+      mod.module_eval do
+        define_method :initialize do |*args|
+          public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
+          super(*args)
         end
       end
+      @klass.prepend mod
+    end
 
-      def define_accessor_for_ar(klass, attr, enum, config)
-        method = "#{attr}_raw"
+    def define_default_value_for_ar(attr, enum, config)
+      method = "_enum_ish_init_#{attr}".to_sym
 
-        klass.class_eval do
-          define_method method do
-            read_attribute(attr)
-          end
-          define_method "#{attr}" do
-            enum.invert[read_attribute(attr)]
-          end
-          define_method "#{attr}=" do |value|
-            write_attribute(attr, enum[value])
-          end
+      @klass.class_eval do
+        after_initialize method
+        define_method method do
+          public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
         end
       end
+    end
 
-      def define_validate(klass, attr, enum, config)
-        klass.class_eval do
-          validates attr, inclusion: { in: enum.values }, allow_nil: true
+    def define_accessor(attr, enum, config)
+      method = "#{attr}_raw"
+
+      @klass.class_eval do
+        define_method method do
+          instance_variable_get("@#{attr}")
+        end
+        define_method "#{attr}" do
+          enum.invert[instance_variable_get("@#{attr}")]
+        end
+        define_method "#{attr}=" do |value|
+          instance_variable_set("@#{attr}", enum[value])
         end
       end
+    end
 
-      def define_scope(klass, attr, enum, config)
-        method = "with_#{attr}"
+    def define_accessor_for_ar(attr, enum, config)
+      method = "#{attr}_raw"
 
-        klass.class_eval do
-          scope method, ->(value) {
-            where(attr => value)
-          }
+      @klass.class_eval do
+        define_method method do
+          read_attribute(attr)
         end
+        define_method "#{attr}" do
+          enum.invert[read_attribute(attr)]
+        end
+        define_method "#{attr}=" do |value|
+          write_attribute(attr, enum[value])
+        end
+      end
+    end
+
+    def define_validate(attr, enum, config)
+      @klass.class_eval do
+        validates attr, inclusion: { in: enum.values }, allow_nil: true
+      end
+    end
+
+    def define_scope(attr, enum, config)
+      method = "with_#{attr}"
+
+      @klass.class_eval do
+        scope method, ->(value) {
+          where(attr => value)
+        }
       end
     end
   end
 
   class Dictionary
-    class << self
-      def load(klass, attr, enum, config, options)
-        dict = load_i18n(klass, attr, enum, options)
+    def initialize(klass)
+      @klass = klass
+    end
 
-        translated = enum.map { |k, v| dict[k] ? [k, dict[k]] : [k, v.to_s] }.to_h
-        translated = translated.map { |k, v| [enum[k], v] }.to_h unless config[:accessor]
-        translated
-      end
+    def load(attr, enum, config, options)
+      dict = load_i18n(attr, enum, options)
 
-      private
+      translated = enum.map { |k, v| dict[k] ? [k, dict[k]] : [k, v.to_s] }.to_h
+      translated = translated.map { |k, v| [enum[k], v] }.to_h unless config[:accessor]
+      translated
+    end
 
-      def load_i18n(klass, attr, enum, options)
-        attr_key = [attr, options.delete(:format)].compact.join('/')
-        i18n_options = options.merge(default: [:"enum_ish.defaults.#{attr_key}", enum.invert])
-        dict = I18n.t("enum_ish.#{klass.name.underscore}.#{attr_key}", i18n_options)
-        dict.map { |k, v| [k.to_s.to_sym, v.to_s] }.to_h
-      end
+    private
+
+    def load_i18n(attr, enum, options)
+      attr_key = [attr, options.delete(:format)].compact.join('/')
+      i18n_options = options.merge(default: [:"enum_ish.defaults.#{attr_key}", enum.invert])
+      dict = I18n.t("enum_ish.#{@klass.name.underscore}.#{attr_key}", i18n_options)
+      dict.map { |k, v| [k.to_s.to_sym, v.to_s] }.to_h
     end
   end
 end
