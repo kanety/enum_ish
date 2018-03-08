@@ -35,7 +35,7 @@ module EnumIsh
 
         @klass.class_eval do
           scope method, ->(value) {
-            where(attr => value)
+            where(attr => (enum[value] || value))
           }
         end
       end
