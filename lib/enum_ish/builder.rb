@@ -64,7 +64,14 @@ module EnumIsh
       mod = Module.new
       mod.module_eval do
         define_method :initialize do |*args|
-          public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
+          if respond_to?(attr) && public_send(attr).nil?
+            default = if config[:default].kind_of?(Proc)
+                        instance_exec(&config[:default])
+                      else
+                        config[:default]
+                      end
+            public_send("#{attr}=", default)
+          end
           super(*args)
         end
       end

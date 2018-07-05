@@ -88,6 +88,19 @@ user = User.new
 user.status  #=> "enable"
 ```
 
+Use default value with block:
+
+```ruby
+class User
+  extend EnumIsh
+  attr_accessor :status, :flag
+  enum_ish :status, ['enable', 'disable'], default: -> { flag ? 'enable' : 'disable' }
+end
+
+user = User.new
+user.status  #=> "disable"
+```
+
 ### Predicates
 
 Generate predicate methods:
