@@ -9,7 +9,14 @@ module EnumIsh
         @klass.class_eval do
           after_initialize method
           define_method method do
-            public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
+            if respond_to?(attr) && public_send(attr).nil?
+              default = if config[:default].kind_of?(Proc)
+                          instance_exec(&config[:default])
+                        else
+                          config[:default]
+                        end
+              public_send("#{attr}=", default)
+            end
           end
         end
       end
@@ -35,7 +42,7 @@ module EnumIsh
 
         @klass.class_eval do
           scope method, ->(value) {
-            where(attr => value)
+            where(attr => (enum[value] || value))
           }
         end
       end

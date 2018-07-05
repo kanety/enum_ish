@@ -34,12 +34,26 @@ describe EnumIsh do
       expect(User.aliased_bool_options).to eq([["真", :true], ["偽", :false]])
     end
 
-    it 'has text method with option' do
+    it 'has text method with format' do
       expect(user.str_text(format: :short)).to eq("文１")
     end
 
-    it 'has options method with option' do
+    it 'has options method with format' do
       expect(User.str_options(format: :short)).to eq([["文１", "status1"], ["文２", "status2"], ["文３", "status3"]])
+    end
+
+    it 'has options method with only' do
+      expect(User.str_options(only: "status1")).to eq([["文字列１", "status1"]])
+      expect(User.int_options(only: 0)).to eq([["整数0", 0]])
+      expect(User.flt_options(only: 0.5)).to eq([["0.5倍", 0.5]])
+      expect(User.bool_options(only: true)).to eq([["真", true]])
+    end
+
+    it 'has options method with except' do
+      expect(User.str_options(except: "status1")).to eq([["文字列２", "status2"], ["文字列３", "status3"]])
+      expect(User.int_options(except: 0)).to eq([["整数1", 1], ["整数2", 2]])
+      expect(User.flt_options(except: 0.5)).to eq([["1倍", 1.0], ["2倍", 2.0]])
+      expect(User.bool_options(except: true)).to eq([["偽", false]])
     end
 
     it 'has predicate method' do
@@ -123,9 +137,16 @@ describe EnumIsh do
 
     it 'with scope' do
       expect(User.with_str(:status1).count).to be(0)
+      expect(User.with_aliased_str(:status1).count).to be(0)
+
       expect(User.with_int(0).count).to be(0)
+      expect(User.with_aliased_int(:zero).count).to be(0)
+
       expect(User.with_flt(0.5).count).to be(0)
+      expect(User.with_aliased_flt(:half).count).to be(0)
+
       expect(User.with_bool(true).count).to be(0)
+      expect(User.with_aliased_bool(:true).count).to be(0)
     end
   end
 end

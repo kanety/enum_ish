@@ -64,7 +64,14 @@ module EnumIsh
       mod = Module.new
       mod.module_eval do
         define_method :initialize do |*args|
-          public_send("#{attr}=", config[:default]) if respond_to?(attr) && public_send(attr).nil?
+          if respond_to?(attr) && public_send(attr).nil?
+            default = if config[:default].kind_of?(Proc)
+                        instance_exec(&config[:default])
+                      else
+                        config[:default]
+                      end
+            public_send("#{attr}=", default)
+          end
           super(*args)
         end
       end
@@ -104,14 +111,25 @@ module EnumIsh
 
       translated = enum.map { |k, v| dict[k] ? [k, dict[k]] : [k, v.to_s] }.to_h
       translated = translated.map { |k, v| [enum[k], v] }.to_h unless config[:accessor]
+
+      if options[:except]
+        except = Array(options[:except])
+        translated.reject! { |k, v| except.include?(k) }
+      end
+      if options[:only]
+        only = Array(options[:only])
+        translated.select! { |k, v| only.include?(k) }
+      end
+
       translated
     end
 
     private
 
     def load_i18n(attr, enum, options)
-      attr_key = [attr, options.delete(:format)].compact.join('/')
-      i18n_options = options.merge(default: [:"enum_ish.defaults.#{attr_key}", enum.invert])
+      attr_key = [attr, options[:format]].compact.join('/')
+      i18n_options = (options[:i18n_options] || {}).merge(default: [:"enum_ish.defaults.#{attr_key}", enum.invert])
+
       dict = I18n.t("enum_ish.#{@klass.name.underscore}.#{attr_key}", i18n_options)
       dict.map { |k, v| [k.to_s.to_sym, v.to_s] }.to_h
     end

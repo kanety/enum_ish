@@ -48,6 +48,8 @@ user = User.new
 user.status = 'enable'
 user.status_text     #=> "有効"
 User.status_options  #=> [["有効", "enable"], ["無効", "disable"]]
+User.status_options(only: 'enable')  #=> [["有効", "enable"]]
+User.status_options(except: 'enable')  #=> [["無効", "disable"]]
 ```
 
 ### Additional translations
@@ -86,6 +88,19 @@ end
 
 user = User.new
 user.status  #=> "enable"
+```
+
+Use default value with block:
+
+```ruby
+class User
+  extend EnumIsh
+  attr_accessor :status, :flag
+  enum_ish :status, ['enable', 'disable'], default: -> { flag ? 'enable' : 'disable' }
+end
+
+user = User.new
+user.status  #=> "disable"
 ```
 
 ### Predicates
