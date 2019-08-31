@@ -13,4 +13,6 @@ class User < ActiveRecord::Base
   enum_ish :aliased_int, { zero: 0, one: 1, two: 2 }, scope: true, accessor: true
   enum_ish :aliased_flt, { half: 0.5, one: 1.0, double: 2.0 }, scope: true, accessor: true
   enum_ish :aliased_bool, { true: true, false: false }, scope: true, accessor: true
+
+  enum_ish :same_label,  ['value1', 'value2']
 end

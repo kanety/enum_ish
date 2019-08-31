@@ -95,6 +95,10 @@ describe EnumIsh do
     it 'do not have translation' do
       expect(UserModel.no_translation_options).to eq([["val1", "val1"], ["val2", "val2"], ["val3", "val3"]])
     end
+
+    it 'returns options with same label' do
+      expect(User.same_label_options).to eq([['label', 'value1'],['label', 'value2']])
+    end
   end
 
   context 'ActiveRecord' do

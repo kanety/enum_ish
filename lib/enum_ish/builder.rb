@@ -44,7 +44,7 @@ module EnumIsh
       @klass.class_eval do
         define_singleton_method method do |options = {}|
           dic = EnumIsh::Dictionary.new(self).load(attr, enum, config, options)
-          dic.invert.to_a
+          dic.to_a.map { |value, label| [label, value] }
         end
       end
     end
