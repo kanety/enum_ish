@@ -1,18 +1,18 @@
 require 'active_support'
 require 'enum_ish/version'
-require 'enum_ish/builder'
-require 'enum_ish/builder/active_record' if defined?(ActiveRecord::Base)
+require 'enum_ish/enum'
+require 'enum_ish/dictionary'
+require 'enum_ish/definer/base'
+require 'enum_ish/definer/active_record' if defined?(ActiveRecord::Base)
 
 module EnumIsh
-  def enum_ish(attr, enum, config = {})
-    [:text, :options].each do |key|
-      config[key] = true unless config.key?(key)
-    end
+  def enum_ish(name, map, config = {})
+    enum = Enum.new(name, map, config)
 
     if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
-      Builder::ActiveRecord.new(self).build(attr, enum, config)
+      Definer::ActiveRecord.new(self).build(enum)
     else
-      Builder.new(self).build(attr, enum, config)
+      Definer::Base.new(self).build(enum)
     end
   end
 end
