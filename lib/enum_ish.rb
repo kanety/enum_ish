@@ -1,5 +1,6 @@
 require 'active_support'
 require 'enum_ish/version'
+require 'enum_ish/config'
 require 'enum_ish/enum'
 require 'enum_ish/dictionary'
 require 'enum_ish/definer/base'

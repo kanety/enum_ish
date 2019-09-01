@@ -15,7 +15,7 @@ module EnumIsh
 
       def define_text(enum)
         @klass.class_eval do
-          define_method "#{enum.name}_text" do |options = {}|
+          define_method "#{Config.text_prefix}#{enum.name}#{Config.text_suffix}" do |options = {}|
             value = public_send(enum.name)
             dic = Dictionary.new(self.class).load(enum, options)
             dic[value] || value
@@ -25,7 +25,7 @@ module EnumIsh
 
       def define_options(enum)
         @klass.class_eval do
-          define_singleton_method "#{enum.name}_options" do |options = {}|
+          define_singleton_method "#{Config.options_prefix}#{enum.name}#{Config.options_suffix}" do |options = {}|
             dic = Dictionary.new(self).load(enum, options)
             dic.to_a.map { |value, label| [label, value] }
           end
@@ -59,7 +59,7 @@ module EnumIsh
 
       def define_accessor(enum)
         @klass.class_eval do
-          define_method "#{enum.name}_raw" do
+          define_method "#{Config.raw_prefix}#{enum.name}#{Config.raw_suffix}" do
             instance_variable_get("@#{enum.name}")
           end
           define_method "#{enum.name}" do

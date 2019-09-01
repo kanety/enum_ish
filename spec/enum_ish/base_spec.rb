@@ -1,4 +1,4 @@
-describe EnumIsh do
+describe EnumIsh::Definer::Base do
   context 'base class' do
     let(:user) { UserModel.new }
 

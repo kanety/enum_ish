@@ -20,7 +20,7 @@ module EnumIsh
 
       def define_accessor(enum)
         @klass.class_eval do
-          define_method "#{enum.name}_raw" do
+          define_method "#{Config.raw_prefix}#{enum.name}#{Config.raw_suffix}" do
             read_attribute(enum.name)
           end
           define_method "#{enum.name}" do
@@ -34,7 +34,7 @@ module EnumIsh
 
       def define_scope(enum)
         @klass.class_eval do
-          scope "with_#{enum.name}", ->(value) {
+          scope "#{Config.scope_prefix}#{enum.name}#{Config.scope_suffix}", ->(value) {
             where(enum.name => (enum.mapping[value] || value))
           }
         end
