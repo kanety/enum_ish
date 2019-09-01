@@ -1,5 +1,5 @@
 describe EnumIsh::Definer::ActiveRecord do
-  context 'ActiveRecord' do
+  context 'ActiveRecord class' do
     let(:user) { User.new }
 
     it 'with default value' do

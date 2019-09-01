@@ -41,8 +41,9 @@ ja:
       aliased_bool:
         true: 真
         false: 偽
+    user_model:
+      <<: *user
+    other:
       same_label:
         value1: label
         value2: label
-    user_model:
-      <<: *user

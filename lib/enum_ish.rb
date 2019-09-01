@@ -1,5 +1,6 @@
 require 'active_support'
 require 'enum_ish/version'
+require 'enum_ish/errors'
 require 'enum_ish/config'
 require 'enum_ish/enum'
 require 'enum_ish/dictionary'
@@ -11,9 +12,9 @@ module EnumIsh
     enum = Enum.new(name, map, config)
 
     if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
-      Definer::ActiveRecord.new(self).build(enum)
+      Definer::ActiveRecord.new(self).define(enum)
     else
-      Definer::Base.new(self).build(enum)
+      Definer::Base.new(self).define(enum)
     end
   end
 end

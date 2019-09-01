@@ -5,8 +5,8 @@ module EnumIsh
         @klass = klass
       end
 
-      def build(enum)
-        [:text, :options, :predicate, :accessor, :validate, :scope, :default].each do |type|
+      def define(enum)
+        [:text, :options, :predicate, :default, :accessor, :validate, :scope].each do |type|
           send("define_#{type}", enum) if enum.setting[type]
         end
       end
@@ -75,6 +75,10 @@ module EnumIsh
         @klass.class_eval do
           validates enum.name, inclusion: { in: enum.mapping.values }, allow_nil: true
         end
+      end
+
+      def define_scope(enum)
+        raise EnumIsh::Error.new(':scope option can be used for ActiveRecord only.')
       end
     end
   end

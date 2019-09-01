@@ -12,7 +12,4 @@ class UserModel
   enum_ish :aliased_int, { zero: 0, one: 1, two: 2 }, default: :zero, accessor: true
   enum_ish :aliased_flt, { half: 0.5, one: 1.0, double: 2.0 }, default: :half, accessor: true
   enum_ish :aliased_bool, { true: true, false: false }, default: :true, accessor: true
-
-  attr_accessor :no_translation
-  enum_ish :no_translation, [:val1, :val2, :val3]
 end
