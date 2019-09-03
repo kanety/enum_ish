@@ -11,6 +11,10 @@ module EnumIsh
   def enum_ish(name, map, config = {})
     enum = Enum.new(name, map, config)
 
+    self.class.class_attribute :_enum_ish_enums unless self.class.respond_to?(:_enum_ish_enums)
+    self.class._enum_ish_enums ||= []
+    self.class._enum_ish_enums << enum
+
     if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
       Definer::ActiveRecord.new(self).define(enum)
     else
