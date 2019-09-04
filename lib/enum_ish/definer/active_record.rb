@@ -27,7 +27,7 @@ module EnumIsh
             enum.mapping.invert[read_attribute(enum.name)]
           end
           define_method "#{enum.name}=" do |value|
-            write_attribute(enum.name, enum.mapping[value])
+            write_attribute(enum.name, enum.mapping[value] || value)
           end
         end
       end
