@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.2.0
+
+* Register enum definitions in the class.
+* Add configuration for method name prefix and suffix.
+* Use ActiveRecord::Type for accessor definition.
+* Raise errors if scope is used for non ActiveRecord class.
+* Refactoring.
+
 ## 1.1.1
 
 * Fix lack of options when some enums have same translation.

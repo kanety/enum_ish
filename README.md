@@ -5,6 +5,7 @@ A ruby and rails extension to generate enum-like methods.
 ## Dependencies
 
 * ruby 2.3+
+* activerecord 5.0+
 * activesupport 5.0+
 
 ## Installation
@@ -137,7 +138,22 @@ user.status              #=> :_enable
 user.status_raw          #=> "enable"
 ```
 
-### Scope (for ActiveRecord)
+### ActiveRecord features
+
+#### Accessor
+
+Generate accessor:
+
+```ruby
+class User < ActiveRecord::Base
+  extend EnumIsh
+  enum_ish :status, { _enable: 'enable', _disable: 'disable' }, accessor: true
+end
+
+User.where(status: :_enable)  #=> SELECT "users".* FROM "users" WHERE "users"."status" = "enable"
+```
+
+#### Scope
 
 Generate scope:
 
@@ -150,7 +166,7 @@ end
 User.with_status(:enable)  #=> SELECT "users".* FROM "users" WHERE "users"."status" = "enable"
 ```
 
-### Validation (for ActiveRecord)
+#### Validation
 
 Generate validation:
 
