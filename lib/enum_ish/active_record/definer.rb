@@ -1,8 +1,8 @@
-module EnumIsh
-  module Definer
-    class ActiveRecord < Base
-      private
+require_relative 'enum_type'
 
+module EnumIsh
+  module ActiveRecord
+    class Definer < EnumIsh::Definer
       def define_default(enum)
         method = "_enum_ish_init_#{enum.name}".to_sym
 
@@ -21,13 +21,12 @@ module EnumIsh
       def define_accessor(enum)
         @klass.class_eval do
           define_method "#{Config.raw_prefix}#{enum.name}#{Config.raw_suffix}" do
-            read_attribute(enum.name)
+            value = read_attribute(enum.name)
+            enum.mapping.fetch(value, value)
           end
-          define_method "#{enum.name}" do
-            enum.mapping.invert[read_attribute(enum.name)]
-          end
-          define_method "#{enum.name}=" do |value|
-            write_attribute(enum.name, enum.mapping[value] || value)
+
+          decorate_attribute_type(enum.name, :enum) do |subtype|
+            EnumIsh::ActiveRecord::EnumType.new(enum.name, enum.mapping, subtype)
           end
         end
       end
@@ -35,7 +34,7 @@ module EnumIsh
       def define_scope(enum)
         @klass.class_eval do
           scope "#{Config.scope_prefix}#{enum.name}#{Config.scope_suffix}", ->(value) {
-            where(enum.name => (enum.mapping[value] || value))
+            where(enum.name => enum.mapping.fetch(value, value))
           }
         end
       end

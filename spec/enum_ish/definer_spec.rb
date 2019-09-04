@@ -1,5 +1,5 @@
-describe EnumIsh::Definer::Base do
-  context 'base class' do
+describe EnumIsh::Definer do
+  context 'basic' do
     let(:user) { UserModel.new }
 
     it 'has text method' do

@@ -1,15 +1,15 @@
-describe EnumIsh::Definer::ActiveRecord do
-  context 'ActiveRecord class' do
+describe EnumIsh::ActiveRecord::Definer do
+  context 'ActiveRecord' do
     let(:user) { User.new }
 
-    it 'with default value' do
+    it 'has default value' do
       expect(user.str).to eq('status1')
       expect(user.int).to eq(0)
       expect(user.flt).to eq(0.5)
       expect(user.bool).to eq(true)
     end
 
-    it 'with accessor method' do
+    it 'has accessor method' do
       user.aliased_str = :status2
       expect(user.aliased_str).to eq(:status2)
       expect(user.aliased_str_raw).to eq('status2')
@@ -27,7 +27,7 @@ describe EnumIsh::Definer::ActiveRecord do
       expect(user.aliased_bool_raw).to eq(false)
     end
 
-    it 'with validation' do
+    it 'has validation' do
       user.str = 'invalid'
       user.int = -1
       user.flt= -1.0
@@ -37,7 +37,7 @@ describe EnumIsh::Definer::ActiveRecord do
       expect(user.errors.keys).to include(:flt)
     end
 
-    it 'with scope' do
+    it 'has scope' do
       expect(User.with_str(:status1).count).to be(1)
       expect(User.with_aliased_str(:status1).count).to be(1)
 
@@ -49,6 +49,20 @@ describe EnumIsh::Definer::ActiveRecord do
 
       expect(User.with_bool(true).count).to be(1)
       expect(User.with_aliased_bool(:true).count).to be(1)
+    end
+
+    it 'handles aliased value in where clause' do
+      expect(User.where(aliased_str: :status1).count).to be(1)
+      expect(User.where(aliased_int: :zero).count).to be(1)
+      expect(User.where(aliased_flt: :half).count).to be(1)
+      expect(User.where(aliased_bool: :true).count).to be(1)
+    end
+
+    it 'handles raw value in where clause' do
+      expect(User.where(aliased_str: 'status1').count).to be(1)
+      expect(User.where(aliased_int: 0).count).to be(1)
+      expect(User.where(aliased_flt: 0.5).count).to be(1)
+      expect(User.where(aliased_bool: true).count).to be(1)
     end
   end
 end
