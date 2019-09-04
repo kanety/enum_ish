@@ -18,7 +18,7 @@ module EnumIsh
       end
 
       def deserialize(value)
-        cast(value)
+        @mapping.key(@subtype.deserialize(value))
       end
 
       def serialize(value)
