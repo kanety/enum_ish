@@ -38,17 +38,17 @@ describe EnumIsh::Definer::ActiveRecord do
     end
 
     it 'with scope' do
-      expect(User.with_str(:status1).count).to be(0)
-      expect(User.with_aliased_str(:status1).count).to be(0)
+      expect(User.with_str(:status1).count).to be(1)
+      expect(User.with_aliased_str(:status1).count).to be(1)
 
-      expect(User.with_int(0).count).to be(0)
-      expect(User.with_aliased_int(:zero).count).to be(0)
+      expect(User.with_int(0).count).to be(1)
+      expect(User.with_aliased_int(:zero).count).to be(1)
 
-      expect(User.with_flt(0.5).count).to be(0)
-      expect(User.with_aliased_flt(:half).count).to be(0)
+      expect(User.with_flt(0.5).count).to be(1)
+      expect(User.with_aliased_flt(:half).count).to be(1)
 
-      expect(User.with_bool(true).count).to be(0)
-      expect(User.with_aliased_bool(:true).count).to be(0)
+      expect(User.with_bool(true).count).to be(1)
+      expect(User.with_aliased_bool(:true).count).to be(1)
     end
   end
 end
