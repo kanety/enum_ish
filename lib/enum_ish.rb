@@ -5,7 +5,7 @@ require 'enum_ish/config'
 require 'enum_ish/enum'
 require 'enum_ish/dictionary'
 require 'enum_ish/definer'
-require 'enum_ish/active_record/definer' if defined?(::ActiveRecord::Base)
+require 'enum_ish/active_record_definer' if defined?(ActiveRecord::Base)
 
 module EnumIsh
   def enum_ish(name, map, config = {})
@@ -15,8 +15,8 @@ module EnumIsh
     self._enum_ish_enums ||= []
     self._enum_ish_enums << enum
 
-    if defined?(::ActiveRecord::Base) && self.ancestors.include?(::ActiveRecord::Base)
-      ActiveRecord::Definer.new(self).define(enum)
+    if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
+      ActiveRecordDefiner.new(self).define(enum)
     else
       Definer.new(self).define(enum)
     end

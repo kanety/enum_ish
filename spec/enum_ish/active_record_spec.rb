@@ -1,4 +1,4 @@
-describe EnumIsh::ActiveRecord::Definer do
+describe EnumIsh::ActiveRecordDefiner do
   context 'ActiveRecord' do
     let(:user) { User.new }
 
