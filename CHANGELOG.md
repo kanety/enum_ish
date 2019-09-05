@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1
+
+* Fix internal module name.
+
 ## 1.2.0
 
 * Register enum definitions in the class.
