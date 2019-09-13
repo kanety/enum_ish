@@ -17,17 +17,17 @@ describe EnumIsh::Definer do
     end
 
     it 'has options method' do
-      expect(User.str_options).to eq([["文字列１", "status1"], ["文字列２", "status2"], ["文字列３", "status3"]])
-      expect(User.int_options).to eq([["整数0", 0], ["整数1", 1], ["整数2", 2]])
-      expect(User.flt_options).to eq([["0.5倍", 0.5], ["1倍", 1.0], ["2倍", 2.0]])
-      expect(User.bool_options).to eq([["真", true], ["偽", false]])
+      expect(user.class.str_options).to eq([["文字列１", "status1"], ["文字列２", "status2"], ["文字列３", "status3"]])
+      expect(user.class.int_options).to eq([["整数0", 0], ["整数1", 1], ["整数2", 2]])
+      expect(user.class.flt_options).to eq([["0.5倍", 0.5], ["1倍", 1.0], ["2倍", 2.0]])
+      expect(user.class.bool_options).to eq([["真", true], ["偽", false]])
     end
 
     it 'has options method for aliased field' do
-      expect(User.aliased_str_options).to eq([["文字列１", :status1], ["文字列２", :status2], ["文字列３", :status3]])
-      expect(User.aliased_int_options).to eq([["整数0", :zero], ["整数1", :one], ["整数2", :two]])
-      expect(User.aliased_flt_options).to eq([["0.5倍", :half], ["1倍", :one], ["2倍", :double]])
-      expect(User.aliased_bool_options).to eq([["真", :true], ["偽", :false]])
+      expect(user.class.aliased_str_options).to eq([["文字列１", :status1], ["文字列２", :status2], ["文字列３", :status3]])
+      expect(user.class.aliased_int_options).to eq([["整数0", :zero], ["整数1", :one], ["整数2", :two]])
+      expect(user.class.aliased_flt_options).to eq([["0.5倍", :half], ["1倍", :one], ["2倍", :double]])
+      expect(user.class.aliased_bool_options).to eq([["真", :true], ["偽", :false]])
     end
 
     it 'has text method with format' do
@@ -35,21 +35,21 @@ describe EnumIsh::Definer do
     end
 
     it 'has options method with format' do
-      expect(User.str_options(format: :short)).to eq([["文１", "status1"], ["文２", "status2"], ["文３", "status3"]])
+      expect(user.class.str_options(format: :short)).to eq([["文１", "status1"], ["文２", "status2"], ["文３", "status3"]])
     end
 
     it 'has options method with only' do
-      expect(User.str_options(only: "status1")).to eq([["文字列１", "status1"]])
-      expect(User.int_options(only: 0)).to eq([["整数0", 0]])
-      expect(User.flt_options(only: 0.5)).to eq([["0.5倍", 0.5]])
-      expect(User.bool_options(only: true)).to eq([["真", true]])
+      expect(user.class.str_options(only: "status1")).to eq([["文字列１", "status1"]])
+      expect(user.class.int_options(only: 0)).to eq([["整数0", 0]])
+      expect(user.class.flt_options(only: 0.5)).to eq([["0.5倍", 0.5]])
+      expect(user.class.bool_options(only: true)).to eq([["真", true]])
     end
 
     it 'has options method with except' do
-      expect(User.str_options(except: "status1")).to eq([["文字列２", "status2"], ["文字列３", "status3"]])
-      expect(User.int_options(except: 0)).to eq([["整数1", 1], ["整数2", 2]])
-      expect(User.flt_options(except: 0.5)).to eq([["1倍", 1.0], ["2倍", 2.0]])
-      expect(User.bool_options(except: true)).to eq([["偽", false]])
+      expect(user.class.str_options(except: "status1")).to eq([["文字列２", "status2"], ["文字列３", "status3"]])
+      expect(user.class.int_options(except: 0)).to eq([["整数1", 1], ["整数2", 2]])
+      expect(user.class.flt_options(except: 0.5)).to eq([["1倍", 1.0], ["2倍", 2.0]])
+      expect(user.class.bool_options(except: true)).to eq([["偽", false]])
     end
 
     it 'has predicate method' do

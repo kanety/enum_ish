@@ -98,39 +98,39 @@ describe EnumIsh::ActiveRecordDefiner do
     end
 
     it 'has scope' do
-      expect(User.with_str(:status1).count).to be(1)
-      expect(User.with_aliased_str(:status1).count).to be(1)
+      expect(user.class.with_str(:status1).count).to be(1)
+      expect(user.class.with_aliased_str(:status1).count).to be(1)
 
-      expect(User.with_int(0).count).to be(1)
-      expect(User.with_aliased_int(:zero).count).to be(1)
+      expect(user.class.with_int(0).count).to be(1)
+      expect(user.class.with_aliased_int(:zero).count).to be(1)
 
-      expect(User.with_flt(0.5).count).to be(1)
-      expect(User.with_aliased_flt(:half).count).to be(1)
+      expect(user.class.with_flt(0.5).count).to be(1)
+      expect(user.class.with_aliased_flt(:half).count).to be(1)
 
-      expect(User.with_bool(true).count).to be(1)
-      expect(User.with_aliased_bool(:true).count).to be(1)
+      expect(user.class.with_bool(true).count).to be(1)
+      expect(user.class.with_aliased_bool(:true).count).to be(1)
     end
 
     it 'handles aliased value in where clause' do
-      expect(User.where(aliased_str: :status1).count).to be(1)
-      expect(User.where(aliased_int: :zero).count).to be(1)
-      expect(User.where(aliased_flt: :half).count).to be(1)
-      expect(User.where(aliased_bool: :true).count).to be(1)
+      expect(user.class.where(aliased_str: :status1).count).to be(1)
+      expect(user.class.where(aliased_int: :zero).count).to be(1)
+      expect(user.class.where(aliased_flt: :half).count).to be(1)
+      expect(user.class.where(aliased_bool: :true).count).to be(1)
     end
 
     it 'handles raw value in where clause' do
-      expect(User.where(aliased_str: 'status1').count).to be(1)
-      expect(User.where(aliased_int: 0).count).to be(1)
-      expect(User.where(aliased_flt: 0.5).count).to be(1)
-      expect(User.where(aliased_bool: true).count).to be(1)
+      expect(user.class.where(aliased_str: 'status1').count).to be(1)
+      expect(user.class.where(aliased_int: 0).count).to be(1)
+      expect(user.class.where(aliased_flt: 0.5).count).to be(1)
+      expect(user.class.where(aliased_bool: true).count).to be(1)
     end
 
     it 'casts from db value' do
-      user = User.find_by(aliased_str: :status1)
-      expect(user.aliased_str).to be(:status1)
-      expect(user.aliased_int).to be(:zero)
-      expect(user.aliased_flt).to be(:half)
-      expect(user.aliased_bool).to be(:true)
+      dbuser = user.class.find_by(aliased_str: :status1)
+      expect(dbuser.aliased_str).to be(:status1)
+      expect(dbuser.aliased_int).to be(:zero)
+      expect(dbuser.aliased_flt).to be(:half)
+      expect(dbuser.aliased_bool).to be(:true)
     end
   end
 end
