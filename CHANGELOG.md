@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.2
+
+* Support assignment of string in addition to symbol.
+
 ## 1.2.1
 
 * Fix internal module name.
