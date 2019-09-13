@@ -7,8 +7,9 @@ module EnumIsh
     end
 
     def cast(value)
-      if @mapping.has_key?(value)
-        value
+      return if value.nil?
+      if @mapping.has_key?(value.to_s.to_sym)
+        value.to_s.to_sym
       elsif @mapping.has_value?(value)
         @mapping.key(value)
       else

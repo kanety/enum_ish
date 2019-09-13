@@ -9,7 +9,7 @@ describe EnumIsh::ActiveRecordDefiner do
       expect(user.bool).to eq(true)
     end
 
-    it 'has accessor for aliased value' do
+    it 'assigns symbol' do
       user.aliased_str = :status2
       expect(user.aliased_str).to eq(:status2)
       expect(user.aliased_str_raw).to eq('status2')
@@ -27,7 +27,25 @@ describe EnumIsh::ActiveRecordDefiner do
       expect(user.aliased_bool_raw).to eq(false)
     end
 
-    it 'has accessor for raw value' do
+    it 'assigns string' do
+      user.aliased_str = 'status2'
+      expect(user.aliased_str).to eq(:status2)
+      expect(user.aliased_str_raw).to eq('status2')
+
+      user.aliased_int = 'one'
+      expect(user.aliased_int).to eq(:one)
+      expect(user.aliased_int_raw).to eq(1)
+
+      user.aliased_flt = 'double'
+      expect(user.aliased_flt).to eq(:double)
+      expect(user.aliased_flt_raw).to eq(2.0)
+
+      user.aliased_bool = 'false'
+      expect(user.aliased_bool).to eq(:false)
+      expect(user.aliased_bool_raw).to eq(false)
+    end
+
+    it 'assigns raw value' do
       user.aliased_str = 'status2'
       expect(user.aliased_str).to eq(:status2)
       expect(user.aliased_str_raw).to eq('status2')
@@ -43,6 +61,24 @@ describe EnumIsh::ActiveRecordDefiner do
       user.aliased_bool = false
       expect(user.aliased_bool).to eq(:false)
       expect(user.aliased_bool_raw).to eq(false)
+    end
+
+    it 'assigns nil' do
+      user.aliased_str = nil
+      expect(user.aliased_str).to eq(nil)
+      expect(user.aliased_str_raw).to eq(nil)
+
+      user.aliased_int = nil
+      expect(user.aliased_int).to eq(nil)
+      expect(user.aliased_int_raw).to eq(nil)
+
+      user.aliased_flt = nil
+      expect(user.aliased_flt).to eq(nil)
+      expect(user.aliased_flt_raw).to eq(nil)
+
+      user.aliased_bool = nil
+      expect(user.aliased_bool).to eq(nil)
+      expect(user.aliased_bool_raw).to eq(nil)
     end
 
     it 'assigns unknown value as it is' do
