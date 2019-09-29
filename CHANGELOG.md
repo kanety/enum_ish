@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.3
+
+* Keep enum definitions as a hash internally.
+
 ## 1.2.2
 
 * Support assignment of string in addition to symbol.
