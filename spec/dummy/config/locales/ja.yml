@@ -43,6 +43,10 @@ ja:
         false: 偽
     user_model:
       <<: *user
+    user_model/manager:
+      <<: *user
+    user_model/general:
+      <<: *user
     other:
       same_label:
         value1: label
