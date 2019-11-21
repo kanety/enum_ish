@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.0
+
+* Support array field.
+
 ## 1.2.3
 
 * Keep enum definitions as a hash internally.
