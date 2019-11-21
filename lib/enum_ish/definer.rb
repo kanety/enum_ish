@@ -15,27 +15,31 @@ module EnumIsh
     def define_text(enum)
       @klass.class_eval do
         define_method "#{Config.text_prefix}#{enum.name}#{Config.text_suffix}" do |options = {}|
-          value = public_send(enum.name)
-          dic = Dictionary.new(self.class).load(enum, options)
-          dic[value] || value
+          dict = Dictionary.new(self.class, enum, options)
+          dict.translate_value(public_send(enum.name))
         end
-      end        
+      end
     end
 
     def define_options(enum)
       @klass.class_eval do
         define_singleton_method "#{Config.options_prefix}#{enum.name}#{Config.options_suffix}" do |options = {}|
-          dic = Dictionary.new(self).load(enum, options)
-          dic.to_a.map { |value, label| [label, value] }
+          dict = Dictionary.new(self, enum, options)
+          dict.translate_options
         end
       end
     end
 
     def define_predicate(enum)
-      enum.mapping.each do |key, value|
+      enum.mapping.each do |enum_key, enum_value|
         @klass.class_eval do
-          define_method "#{enum.name}_#{key}?".tr('.', '_') do
-            public_send(enum.name) == value
+          define_method "#{enum.name}_#{enum_key}?".tr('.', '_') do
+            value = public_send(enum.name)
+            if value.is_a?(Array)
+              value == [enum_value]
+            else
+              value == enum_value
+            end
           end
         end
       end
@@ -62,10 +66,10 @@ module EnumIsh
           instance_variable_get("@#{enum.name}")
         end
         define_method "#{enum.name}" do
-          enum.mapping.invert[instance_variable_get("@#{enum.name}")]
+          enum.to_sym(instance_variable_get("@#{enum.name}"))
         end
         define_method "#{enum.name}=" do |value|
-          instance_variable_set("@#{enum.name}", enum.mapping.fetch(value, value))
+          instance_variable_set("@#{enum.name}", enum.to_raw(value))
         end
       end
     end

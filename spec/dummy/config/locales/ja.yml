@@ -26,6 +26,9 @@ ja:
       bool:
         true: 真
         false: 偽
+      array:
+        flag1: フラグ1
+        flag2: フラグ2
       aliased_str:
         status1: 文字列１
         status2: 文字列２
@@ -41,6 +44,9 @@ ja:
       aliased_bool:
         true: 真
         false: 偽
+      aliased_array:
+        flag1: フラグ1
+        flag2: フラグ2
     user_model:
       <<: *user
     user_model/manager:

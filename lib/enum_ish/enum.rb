@@ -10,6 +10,23 @@ module EnumIsh
       @setting = init_setting(setting)
     end
 
+    def to_raw(value)
+      if value.is_a?(Array)
+        value.map { |v| @mapping.fetch(v, v) }
+      else
+        @mapping.fetch(value, value)
+      end
+    end
+
+    def to_sym(value)
+      inverted = @mapping.invert
+      if value.is_a?(Array)
+        value.map { |v| inverted[v] }
+      else
+        inverted[value]
+      end
+    end
+
     private
 
     def init_mapping(mapping)

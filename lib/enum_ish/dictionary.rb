@@ -1,17 +1,30 @@
 module EnumIsh
   class Dictionary
-    def initialize(klass)
+    def initialize(klass, enum, options = {})
       @klass = klass
+      @dict = load(enum, options)
     end
 
-    def load(enum, options = {})
-      translated = translate(enum, options)
-      filter(translated, options)
+    def translate_value(value)
+      if value.is_a?(Array)
+        value.map { |v| @dict[v] || v }
+      else
+        @dict[value] || value
+      end
+   end
+
+    def translate_options
+      @dict.to_a.map { |value, label| [label, value] }
     end
 
     private
 
-    def translate(enum, options)
+    def load(enum, options)
+      dict = translate_dict(enum, options)
+      filter(dict, options)
+    end
+
+    def translate_dict(enum, options)
       dict = load_dict(enum, options)
       translated = enum.mapping.map { |k, v| dict[k] ? [k, dict[k]] : [k, v.to_s] }.to_h
       translated = translated.map { |k, v| [enum.mapping[k], v] }.to_h unless enum.setting[:accessor]

@@ -7,6 +7,7 @@ describe EnumIsh::Definer do
       expect(user.int_text).to eq("整数0")
       expect(user.flt_text).to eq("0.5倍")
       expect(user.bool_text).to eq("真")
+      expect(user.array_text).to eq(["フラグ1"])
     end
 
     it 'has text method for aliased field' do
@@ -14,6 +15,7 @@ describe EnumIsh::Definer do
       expect(user.aliased_int_text).to eq("整数0")
       expect(user.aliased_flt_text).to eq("0.5倍")
       expect(user.aliased_bool_text).to eq("真")
+      expect(user.aliased_array_text).to eq(["フラグ1"])
     end
 
     it 'has options method' do
@@ -21,6 +23,7 @@ describe EnumIsh::Definer do
       expect(user.class.int_options).to eq([["整数0", 0], ["整数1", 1], ["整数2", 2]])
       expect(user.class.flt_options).to eq([["0.5倍", 0.5], ["1倍", 1.0], ["2倍", 2.0]])
       expect(user.class.bool_options).to eq([["真", true], ["偽", false]])
+      expect(user.class.array_options).to eq([["フラグ1", "flag1"], ["フラグ2", "flag2"]])
     end
 
     it 'has options method for aliased field' do
@@ -28,6 +31,7 @@ describe EnumIsh::Definer do
       expect(user.class.aliased_int_options).to eq([["整数0", :zero], ["整数1", :one], ["整数2", :two]])
       expect(user.class.aliased_flt_options).to eq([["0.5倍", :half], ["1倍", :one], ["2倍", :double]])
       expect(user.class.aliased_bool_options).to eq([["真", :true], ["偽", :false]])
+      expect(user.class.aliased_array_options).to eq([["フラグ1", :flag1], ["フラグ2", :flag2]])
     end
 
     it 'has text method with format' do
@@ -43,6 +47,7 @@ describe EnumIsh::Definer do
       expect(user.class.int_options(only: 0)).to eq([["整数0", 0]])
       expect(user.class.flt_options(only: 0.5)).to eq([["0.5倍", 0.5]])
       expect(user.class.bool_options(only: true)).to eq([["真", true]])
+      expect(user.class.array_options(only: "flag1")).to eq([["フラグ1", "flag1"]])
     end
 
     it 'has options method with except' do
@@ -50,6 +55,7 @@ describe EnumIsh::Definer do
       expect(user.class.int_options(except: 0)).to eq([["整数1", 1], ["整数2", 2]])
       expect(user.class.flt_options(except: 0.5)).to eq([["1倍", 1.0], ["2倍", 2.0]])
       expect(user.class.bool_options(except: true)).to eq([["偽", false]])
+      expect(user.class.array_options(except: "flag1")).to eq([["フラグ2", "flag2"]])
     end
 
     it 'has predicate method' do
@@ -61,6 +67,8 @@ describe EnumIsh::Definer do
       expect(user.flt_1_0?).to eq(false)
       expect(user.bool_true?).to eq(true)
       expect(user.bool_false?).to eq(false)
+      expect(user.array_flag1?).to eq(true)
+      expect(user.array_flag2?).to eq(false)
     end
 
     it 'has default value' do
@@ -68,6 +76,7 @@ describe EnumIsh::Definer do
       expect(user.int).to eq(0)
       expect(user.flt).to eq(0.5)
       expect(user.bool).to eq(true)
+      expect(user.array).to eq(['flag1'])
     end
 
     it 'has accessor method' do
@@ -86,6 +95,10 @@ describe EnumIsh::Definer do
       user.aliased_bool = :false
       expect(user.aliased_bool).to eq(:false)
       expect(user.aliased_bool_raw).to eq(false)
+
+      user.aliased_array = [:flag1]
+      expect(user.aliased_array).to eq([:flag1])
+      expect(user.aliased_array_raw).to eq(['flag1'])
     end
   end
 
