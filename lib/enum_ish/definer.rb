@@ -49,15 +49,15 @@ module EnumIsh
       mod = Module.new
       mod.module_eval do
         define_method :initialize do |*args|
+          super(*args)
           if respond_to?(enum.name) && public_send(enum.name).nil?
             default = enum.setting[:default]
             default = instance_exec(&default) if default.kind_of?(Proc)
             public_send("#{enum.name}=", default)
           end
-          super(*args)
         end
       end
-      @klass.prepend mod
+      @klass.send(:include, mod)
     end
 
     def define_accessor(enum)

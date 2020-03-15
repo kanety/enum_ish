@@ -1,4 +1,4 @@
-class Other
+class OtherModel
   extend EnumIsh
 
   attr_accessor :no_translation

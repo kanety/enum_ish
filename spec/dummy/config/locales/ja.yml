@@ -19,16 +19,30 @@ ja:
         0: 整数0
         1: 整数1
         2: 整数2
+      int/short:
+        0: 0
+        1: 1
+        2: 2
       flt:
         0.5: 0.5倍
         1.0: 1倍
         2.0: 2倍
+      flt/short:
+        0.5: 0.5
+        1.0: 1
+        2.0: 2
       bool:
         true: 真
         false: 偽
+      bool/short:
+        true: t
+        false: f
       array:
         flag1: フラグ1
         flag2: フラグ2
+      array/short:
+        flag1: f1
+        flag2: f2
       aliased_str:
         status1: 文字列１
         status2: 文字列２
@@ -49,11 +63,13 @@ ja:
         flag2: フラグ2
     user_model:
       <<: *user
+    user_model_with_attrs:
+      <<: *user
     user_model/manager:
       <<: *user
     user_model/general:
       <<: *user
-    other:
+    other_model:
       same_label:
         value1: label
         value2: label
