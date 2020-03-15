@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.1
+
+* Fix default value for model included ActiveModel.
+
 ## 1.3.0
 
 * Support array field.
