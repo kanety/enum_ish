@@ -33,7 +33,7 @@ module EnumIsh
 
     def load_dict(enum, options)
       key = i18n_key(enum, options)
-      dict = I18n.t("enum_ish.#{@klass.name.underscore}.#{key}", i18n_options(enum, options))
+      dict = I18n.t("enum_ish.#{@klass.name.underscore}.#{key}", **i18n_options(enum, options))
       dict.map { |k, v| [k.to_s.to_sym, v.to_s] }.to_h
     end
 
