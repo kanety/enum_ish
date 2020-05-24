@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.2
+
+* Fix deprecation warning for ruby 2.7.
+
 ## 1.3.1
 
 * Fix default value for model included ActiveModel.
