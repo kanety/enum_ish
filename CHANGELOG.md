@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.3
+
+* Support rails 6.1.
+
 ## 1.3.2
 
 * Fix deprecation warning for ruby 2.7.
