@@ -32,7 +32,9 @@ describe EnumIsh::ActiveRecordDefiner do
 
     it 'has scope' do
       expect(user.class.with_bool(true).count).to be(1)
+      expect(user.class.with_bool_not(true).count).to be(2)
       expect(user.class.with_aliased_bool(:true).count).to be(1)
+      expect(user.class.with_aliased_bool_not(:true).count).to be(2)
     end
 
     it 'handles aliased value in where clause' do

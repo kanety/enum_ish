@@ -41,6 +41,9 @@ module EnumIsh
         scope "#{Config.scope_prefix}#{enum.name}#{Config.scope_suffix}", ->(value) {
           where(enum.name => enum.mapping.fetch(value, value))
         }
+        scope "#{Config.scope_prefix}#{enum.name}_not#{Config.scope_suffix}", ->(value) {
+          where.not(enum.name => enum.mapping.fetch(value, value))
+        }
       end
     end
   end

@@ -44,7 +44,9 @@ describe EnumIsh::ActiveRecordDefiner do
 
     it 'has scope' do
       expect(user.class.with_str(:status1).count).to be(1)
+      expect(user.class.with_str_not(:status1).count).to be(2)
       expect(user.class.with_aliased_str(:status1).count).to be(1)
+      expect(user.class.with_aliased_str_not(:status1).count).to be(2)
     end
 
     it 'handles aliased value in where clause' do
