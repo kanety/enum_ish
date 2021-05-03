@@ -33,7 +33,7 @@ module EnumIsh
 
     def load_dict(enum, options)
       key = i18n_key(enum, options)
-      dict = I18n.t("enum_ish.#{@klass.name.underscore}.#{key}", **i18n_options(enum, options))
+      dict = I18n.t("enum_ish.#{@klass.name.to_s.underscore}.#{key}", **i18n_options(enum, options))
       dict.map { |k, v| [k.to_s.to_sym, v.to_s] }.to_h
     end
 
@@ -44,7 +44,12 @@ module EnumIsh
     def i18n_options(enum, options)
       key = i18n_key(enum, options)
       opts = options[:i18n_options] || {}
-      opts.merge(default: [:"enum_ish.defaults.#{key}", enum.mapping.invert])
+      opts.merge(default: i18n_ancestors(key) + [:"enum_ish.defaults.#{key}", enum.mapping.invert])
+    end
+
+    def i18n_ancestors(key)
+      ancestors = @klass.ancestors.drop(1).select { |a| a.is_a?(Class) && !a.name.empty? }
+      ancestors.map { |a| :"enum_ish.#{a.name.underscore}.#{key}" }
     end
 
     def filter(translated, options)
