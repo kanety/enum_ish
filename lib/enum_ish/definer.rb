@@ -32,10 +32,10 @@ module EnumIsh
 
     def define_predicate(enum)
       enum.mapping.each do |enum_key, enum_value|
-        if enum.setting[:predicate].is_a?(Hash) && enum.setting[:predicate][:prefix] == false
-          method_name = "#{enum_key}?"
+        method_name = if enum.setting[:predicate].is_a?(Hash) && enum.setting[:predicate][:prefix] == false
+          "#{enum_key}?"
         else
-          method_name = "#{enum.name}_#{enum_key}?"
+          "#{enum.name}_#{enum_key}?"
         end
         @klass.class_eval do
           define_method method_name.tr('.', '_') do

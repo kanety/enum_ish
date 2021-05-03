@@ -1,11 +1,7 @@
 describe EnumIsh::ActiveRecordDefiner do
   let(:user) { User.new }
 
-  context 'string field' do
-    it 'has default value' do
-      expect(user.str).to eq('status1')
-    end
-
+  context :string do
     it 'assigns symbol' do
       user.aliased_str = :status2
       expect(user.aliased_str).to eq(:status2)
@@ -34,31 +30,6 @@ describe EnumIsh::ActiveRecordDefiner do
       user.aliased_str = 'unknown'
       expect(user.aliased_str).to eq('unknown')
       expect(user.aliased_str_raw).to eq('unknown')
-    end
-
-    it 'has validation' do
-      user.str = 'invalid'
-      expect(user.valid?).to eq(false)
-    end
-
-    it 'has scope' do
-      expect(user.class.with_str(:status1).count).to be(1)
-      expect(user.class.with_str_not(:status1).count).to be(2)
-      expect(user.class.with_aliased_str(:status1).count).to be(1)
-      expect(user.class.with_aliased_str_not(:status1).count).to be(2)
-    end
-
-    it 'handles aliased value in where clause' do
-      expect(user.class.where(aliased_str: :status1).count).to be(1)
-    end
-
-    it 'handles raw value in where clause' do
-      expect(user.class.where(aliased_str: 'status1').count).to be(1)
-    end
-
-    it 'casts from db value' do
-      dbuser = user.class.find_by(aliased_str: :status1)
-      expect(dbuser.aliased_str).to be(:status1)
     end
   end
 end

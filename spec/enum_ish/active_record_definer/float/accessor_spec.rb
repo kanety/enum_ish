@@ -1,11 +1,7 @@
 describe EnumIsh::ActiveRecordDefiner do
   let(:user) { User.new }
 
-  context 'float field' do
-    it 'has default value' do
-      expect(user.flt).to eq(0.5)
-    end
-
+  context :float do
     it 'assigns symbol' do
       user.aliased_flt = :double
       expect(user.aliased_flt).to eq(:double)
@@ -34,31 +30,6 @@ describe EnumIsh::ActiveRecordDefiner do
       user.aliased_flt = 99.0
       expect(user.aliased_flt).to eq(99.0)
       expect(user.aliased_flt_raw).to eq(99.0)
-    end
-
-    it 'has validation' do
-      user.flt= -1.0
-      expect(user.valid?).to eq(false)
-    end
-
-    it 'has scope' do
-      expect(user.class.with_flt(0.5).count).to be(1)
-      expect(user.class.with_flt_not(0.5).count).to be(2)
-      expect(user.class.with_aliased_flt(:half).count).to be(1)
-      expect(user.class.with_aliased_flt_not(:half).count).to be(2)
-    end
-
-    it 'handles aliased value in where clause' do
-      expect(user.class.where(aliased_flt: :half).count).to be(1)
-    end
-
-    it 'handles raw value in where clause' do
-      expect(user.class.where(aliased_flt: 0.5).count).to be(1)
-    end
-
-    it 'casts from db value' do
-      dbuser = user.class.find_by(aliased_str: :status1)
-      expect(dbuser.aliased_flt).to be(:half)
     end
   end
 end
