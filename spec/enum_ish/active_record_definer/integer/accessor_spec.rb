@@ -1,7 +1,13 @@
 describe EnumIsh::ActiveRecordDefiner do
-  let(:user) { User.new }
-
   context :integer do
+    let(:model) {
+      test_model(User) do
+        enum_ish :int, [0, 1, 2]
+        enum_ish :aliased_int, { zero: 0, one: 1, two: 2 }, accessor: true
+      end
+    }
+    let(:user) { model.new }
+
     it 'assigns symbol' do
       user.aliased_int = :one
       expect(user.aliased_int).to eq(:one)

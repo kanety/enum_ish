@@ -1,7 +1,13 @@
 describe EnumIsh::ActiveRecordDefiner do
-  let(:user) { User.new }
-
   context :float do
+    let(:model) {
+      test_model(User) do
+        enum_ish :flt, [0.5, 1.0, 2.0], scope: true
+        enum_ish :aliased_flt, { half: 0.5, one: 1.0, double: 2.0 }, accessor: true, scope: true
+      end
+    }
+    let(:user) { model.new }
+
     it 'has scope' do
       expect(user.class.with_flt(0.5).count).to be(1)
       expect(user.class.with_aliased_flt(:half).count).to be(1)

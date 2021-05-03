@@ -63,13 +63,8 @@ ja:
         flag2: フラグ2
     user_model:
       <<: *user
+      same_label_value:
+        val1: label
+        val2: label
     user_model_with_attrs:
       <<: *user
-    user_model/manager:
-      <<: *user
-    user_model/general:
-      <<: *user
-    other_model:
-      same_label:
-        value1: label
-        value2: label

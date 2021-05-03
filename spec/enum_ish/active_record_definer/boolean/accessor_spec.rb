@@ -1,7 +1,13 @@
 describe EnumIsh::ActiveRecordDefiner do
-  let(:user) { User.new }
-
   context :boolean do
+    let(:model) {
+      test_model(User) do
+        enum_ish :bool, [true, false]
+        enum_ish :aliased_bool, { true: true, false: false }, accessor: true
+      end
+    }
+    let(:user) { model.new }
+
     it 'assigns symbol' do
       user.aliased_bool = :false
       expect(user.aliased_bool).to eq(:false)

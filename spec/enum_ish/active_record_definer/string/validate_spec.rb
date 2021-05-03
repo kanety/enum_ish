@@ -1,7 +1,13 @@
 describe EnumIsh::ActiveRecordDefiner do
-  let(:user) { User.new }
-
   context :string do
+    let(:model) {
+      test_model(User) do
+        enum_ish :str, ['status1', 'status2', 'status3'], validate: true
+        enum_ish :aliased_str, { status1: 'status1', status2: 'status2', status3: 'status3' }, accessor: true, validate: true
+      end
+    }
+    let(:user) { model.new }
+
     it 'is valid' do
       user.str = 'status1'
       expect(user.valid?).to eq(true)
@@ -13,7 +19,7 @@ describe EnumIsh::ActiveRecordDefiner do
     end
 
     it 'is valid' do
-      user.str = :status1
+      user.aliased_str = :status1
       expect(user.valid?).to eq(true)
     end
 

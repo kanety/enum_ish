@@ -1,7 +1,13 @@
 describe EnumIsh::ActiveRecordDefiner do
-  let(:user) { User.new }
-
   context :boolean do
+    let(:model) {
+      test_model(User) do
+        enum_ish :bool, [true, false], scope: true
+        enum_ish :aliased_bool, { true: true, false: false }, accessor: true, scope: true
+      end
+    }
+    let(:user) { model.new }
+
     it 'has scope' do
       expect(user.class.with_bool(true).count).to be(1)
       expect(user.class.with_aliased_bool(:true).count).to be(1)

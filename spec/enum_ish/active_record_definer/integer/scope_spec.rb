@@ -1,7 +1,13 @@
 describe EnumIsh::ActiveRecordDefiner do
-  let(:user) { User.new }
-
   context :integer do
+    let(:model) {
+      test_model(User) do
+        enum_ish :int, [0, 1, 2], scope: true
+        enum_ish :aliased_int, { zero: 0, one: 1, two: 2 }, accessor: true, scope: true
+      end
+    }
+    let(:user) { model.new }
+
     it 'has scope' do
       expect(user.class.with_int(0).count).to be(1)
       expect(user.class.with_aliased_int(:zero).count).to be(1)

@@ -1,3 +1,3 @@
 class UserModel::Manager < UserModel
-  enum_ish :str, ['status1', 'status2'], default: 'status1'
+  enum_ish :status, ['disable'], default: 'disable'
 end
