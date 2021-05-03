@@ -10,6 +10,8 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.integer :aliased_int
       t.float   :aliased_flt
       t.boolean :aliased_bool
+
+      t.string  :status
     end
   end
 end

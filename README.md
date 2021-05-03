@@ -121,6 +121,21 @@ user.status_enable?   #=> true
 user.status_disable?  #=> false
 ```
 
+Without prefix:
+
+```ruby
+class User
+  extend EnumIsh
+  attr_accessor :status
+  enum_ish :status, ['enable', 'disable'], predicate: { prefix: false }
+end
+
+user = User.new
+user.status = 'enable'
+user.enable?   #=> true
+user.disable?  #=> false
+```
+
 ### Accessor
 
 Generate getter and setter for aliased symbols instead of raw values:
@@ -164,6 +179,7 @@ class User < ActiveRecord::Base
 end
 
 User.with_status(:enable)  #=> SELECT "users".* FROM "users" WHERE "users"."status" = "enable"
+User.with_status_not(:enable)  #=> SELECT "users".* FROM "users" WHERE "users"."status" != 'enable'
 ```
 
 #### Validation
