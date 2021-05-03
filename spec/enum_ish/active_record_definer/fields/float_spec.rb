@@ -38,8 +38,7 @@ describe EnumIsh::ActiveRecordDefiner do
 
     it 'has validation' do
       user.flt= -1.0
-      user.valid?
-      expect(user.errors.keys).to include(:flt)
+      expect(user.valid?).to eq(false)
     end
 
     it 'has scope' do
