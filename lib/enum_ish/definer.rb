@@ -80,8 +80,13 @@ module EnumIsh
     end
 
     def define_validate(enum)
+      targets = if enum.setting[:accessor]
+        enum.mapping.keys
+      else
+        enum.mapping.values
+      end
       @klass.class_eval do
-        validates enum.name, inclusion: { in: enum.mapping.values }, allow_nil: true
+        validates enum.name, inclusion: { in: targets }, allow_nil: true
       end
     end
 
