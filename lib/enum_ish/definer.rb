@@ -37,13 +37,18 @@ module EnumIsh
         else
           "#{enum.name}_#{enum_key}?"
         end
+        target_value = if enum.setting[:accessor]
+          enum_key
+        else
+          enum_value
+        end
         @klass.class_eval do
           define_method method_name.tr('.', '_') do
             value = public_send(enum.name)
             if value.is_a?(Array)
-              value == [enum_value]
+              value == [target_value]
             else
-              value == enum_value
+              value == target_value
             end
           end
         end
