@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.4.0
+
+* Generate `not` scope for activerecord class.
+* Add prefix option to define short predicate method.
+* Search translation including ancestor classes.
+* Support multiple arguments for scope.
+* Fix predicate and validation bugs for field with `accessor: true`.
+
 ## 1.3.3
 
 * Support rails 6.1.
