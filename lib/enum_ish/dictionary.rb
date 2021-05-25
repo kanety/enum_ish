@@ -2,7 +2,9 @@ module EnumIsh
   class Dictionary
     def initialize(klass, enum, options = {})
       @klass = klass
-      @dict = load(enum, options)
+      @enum = enum
+      @options = options
+      @dict = load_dict
     end
 
     def translate_value(value)
@@ -11,7 +13,7 @@ module EnumIsh
       else
         @dict[value] || value
       end
-   end
+    end
 
     def translate_options
       @dict.to_a.map { |value, label| [label, value] }
@@ -19,49 +21,52 @@ module EnumIsh
 
     private
 
-    def load(enum, options)
-      dict = translate_dict(enum, options)
-      filter(dict, options)
-    end
+    def load_dict
+      i18n = load_from_i18n.transform_keys { |k| k.to_s.to_sym }
 
-    def translate_dict(enum, options)
-      dict = load_dict(enum, options)
-      translated = enum.mapping.map { |k, v| dict[k] ? [k, dict[k]] : [k, v.to_s] }.to_h
-      translated = translated.map { |k, v| [enum.mapping[k], v] }.to_h unless enum.setting[:accessor]
-      translated
-    end
-
-    def load_dict(enum, options)
-      key = i18n_key(enum, options)
-      dict = I18n.t("enum_ish.#{@klass.name.to_s.underscore}.#{key}", **i18n_options(enum, options))
-      dict.map { |k, v| [k.to_s.to_sym, v.to_s] }.to_h
-    end
-
-    def i18n_key(enum, options)
-      [enum.name, options[:format]].compact.join('/')
-    end
-
-    def i18n_options(enum, options)
-      key = i18n_key(enum, options)
-      opts = options[:i18n_options] || {}
-      opts.merge(default: i18n_ancestors(key) + [:"enum_ish.defaults.#{key}", enum.mapping.invert])
-    end
-
-    def i18n_ancestors(key)
-      ancestors = @klass.ancestors.drop(1).select { |a| a.is_a?(Class) && !a.name.empty? }
-      ancestors.map { |a| :"enum_ish.#{a.name.underscore}.#{key}" }
-    end
-
-    def filter(translated, options)
-      if options[:except]
-        except = Array(options[:except])
-        translated.reject! { |k, v| except.include?(k) }
+      dict = {}
+      if @enum.setting[:accessor]
+        @enum.mapping.each { |k, v| dict[k] = i18n[k].to_s }
+      else
+        @enum.mapping.each { |k, v| dict[v] = i18n[k].to_s }
       end
-      if options[:only]
-        only = Array(options[:only])
-        translated.select! { |k, v| only.include?(k) }
+
+      filter(dict)
+    end
+
+    def load_from_i18n
+      key = [@enum.name, @options[:format]].compact.join('/')
+      options = (@options[:i18n_options] || {}).merge(default: nil)
+      dict = I18n.t(:"enum_ish.#{@klass.name.underscore}.#{key}", **options)
+      return dict if dict
+
+      i18n_ancestors.each do |ancestor|
+        dict = I18n.t(:"enum_ish.#{ancestor.name.underscore}.#{key}", **options)
+        return dict if dict
       end
-      translated
+
+      dict = I18n.t(:"enum_ish.defaults.#{key}", **options)
+      return dict if dict
+
+      @enum.mapping.invert
+    end
+
+    def i18n_ancestors
+      @klass.ancestors.drop(1)
+            .take_while { |a| a.name != 'ActiveRecord::Base' && a.name != 'Object' }
+            .select { |a| a.is_a?(Class) && !a.name.empty? }
+    end
+
+    def filter(dict)
+      if @options[:except]
+        except = Array(@options[:except])
+        dict.reject! { |k, v| except.include?(k) }
+      end
+      if @options[:only]
+        only = Array(@options[:only])
+        dict.select! { |k, v| only.include?(k) }
+      end
+      dict
     end
   end
 end
