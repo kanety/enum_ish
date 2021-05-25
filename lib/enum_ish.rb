@@ -22,6 +22,15 @@ module EnumIsh
   end
 
   def self.extended(klass)
+    super
     klass.class_attribute :_enum_ish_enums
+    klass.extend ClassMethods
+  end
+
+  module ClassMethods
+    def inherited(subclass)
+      super
+      subclass._enum_ish_enums = self._enum_ish_enums.dup
+    end
   end
 end
