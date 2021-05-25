@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.4.1
+
+* Avoid overwrite of superclass's `_enum_ish_enums`.
+* Filter ancestors for dictionary lookup.
+
 ## 1.4.0
 
 * Generate `not` scope for activerecord class.
