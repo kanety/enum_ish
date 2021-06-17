@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EnumIsh
   class Dictionary
     def initialize(klass, enum, options = {})

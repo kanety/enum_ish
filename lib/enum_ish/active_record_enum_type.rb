@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EnumIsh
   class ActiveRecordEnumType < ActiveRecord::Type::Value
     def initialize(name, mapping, subtype)

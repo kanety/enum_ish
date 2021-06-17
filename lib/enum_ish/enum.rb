@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EnumIsh
   class Enum
     attr_accessor :name

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EnumIsh
   class Definer
     def initialize(klass)
