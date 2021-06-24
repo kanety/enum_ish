@@ -26,7 +26,7 @@ Extend your class using EnumIsh and define an enum-like field:
 
 ```ruby
 class User
-  extend EnumIsh
+  include EnumIsh::Base
   attr_accessor :status                    # status is a string field
   enum_ish :status, ['enable', 'disable']  # status has 'enable' or 'disable'
 end
@@ -82,7 +82,7 @@ Set default value:
 
 ```ruby
 class User
-  extend EnumIsh
+  include EnumIsh::Base
   attr_accessor :status
   enum_ish :status, ['enable', 'disable'], default: 'enable'
 end
@@ -95,7 +95,7 @@ Use default value with block:
 
 ```ruby
 class User
-  extend EnumIsh
+  include EnumIsh::Base
   attr_accessor :status, :flag
   enum_ish :status, ['enable', 'disable'], default: -> { flag ? 'enable' : 'disable' }
 end
@@ -110,7 +110,7 @@ Generate predicate methods:
 
 ```ruby
 class User
-  extend EnumIsh
+  include EnumIsh::Base
   attr_accessor :status
   enum_ish :status, ['enable', 'disable'], predicate: true
 end
@@ -125,7 +125,7 @@ Without prefix:
 
 ```ruby
 class User
-  extend EnumIsh
+  include EnumIsh::Base
   attr_accessor :status
   enum_ish :status, ['enable', 'disable'], predicate: { prefix: false }
 end
@@ -142,7 +142,7 @@ Generate getter and setter for aliased symbols instead of raw values:
 
 ```ruby
 class User
-  extend EnumIsh
+  include EnumIsh::Base
   attr_accessor :status
   enum_ish :status, { _enable: 'enable', _disable: 'disable' }, accessor: true
 end
@@ -161,7 +161,7 @@ Generate accessor:
 
 ```ruby
 class User < ActiveRecord::Base
-  extend EnumIsh
+  include EnumIsh::Base
   enum_ish :status, { _enable: 'enable', _disable: 'disable' }, accessor: true
 end
 
@@ -174,7 +174,7 @@ Generate scope:
 
 ```ruby
 class User < ActiveRecord::Base
-  extend EnumIsh
+  include EnumIsh::Base
   enum_ish :status, ['enable', 'disable'], scope: true
 end
 
@@ -188,7 +188,7 @@ Generate validation:
 
 ```ruby
 class User < ActiveRecord::Base
-  extend EnumIsh
+  include EnumIsh::Base
   enum_ish :status, ['enable', 'disable'], validate: true
 end
 

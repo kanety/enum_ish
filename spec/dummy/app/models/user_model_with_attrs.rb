@@ -2,7 +2,7 @@ if Rails.gem_version >= Gem::Version.new("5.2")
   class UserModelWithAttrs
     include ActiveModel::Model
     include ActiveModel::Attributes
-    extend EnumIsh
+    include EnumIsh::Base
 
     attribute :str, :string
     attribute :aliased_str, :string

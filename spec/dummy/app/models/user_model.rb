@@ -1,5 +1,5 @@
 class UserModel
-  extend EnumIsh
+  include EnumIsh::Base
 
   attr_accessor :str
   attr_accessor :aliased_str

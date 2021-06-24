@@ -2,7 +2,9 @@
 
 module EnumIsh
   class Config
-    @@options = {
+    class_attribute :options
+
+    self.options = {
       text_prefix: '',
       text_suffix: '_text',
       options_prefix: '',
@@ -13,13 +15,13 @@ module EnumIsh
       scope_suffix: ''
     }
 
-    @@options.keys.each do |key|
+    options.keys.each do |key|
       define_singleton_method "#{key}" do
-        @@options[key]
+        options[key]
       end
 
       define_singleton_method "#{key}=" do |val|
-        @@options[key] = val
+        options[key] = val
       end
     end
 
