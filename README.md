@@ -197,6 +197,17 @@ user.status = 'INVALID'
 user.valid?  #=> false
 ```
 
+### Dictionary cache
+
+You can enable dictionary cache using rack middleware:
+
+```ruby
+Rails.application.config.middleware.use EnumIsh::DictionaryCache
+```
+
+This middleware enable dictionary cache for each request.
+Performance of dictionary lookup will be improved in case one dictionary is used repeatedly in one request.
+
 ## Contributing
 
 Bug reports and pull requests are welcome at https://github.com/kanety/enum_ish.

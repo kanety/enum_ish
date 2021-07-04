@@ -24,11 +24,5 @@ module EnumIsh
         data[key] = val
       end
     end
-
-    class << self
-      def configure
-        yield self
-      end
-    end
   end
 end

@@ -2,11 +2,13 @@
 
 module EnumIsh
   class Dictionary
+    CACHE_KEY = :_enum_ish_dictionary_cache
+
     def initialize(klass, enum, options = {})
       @klass = klass
       @enum = enum
       @options = options
-      @dict = load_dict
+      @dict = cache { Lookup.new(@klass, @enum, @options).call }
     end
 
     def translate_value(value)
@@ -23,8 +25,36 @@ module EnumIsh
 
     private
 
-    def load_dict
-      i18n = load_from_i18n.transform_keys { |k| k.to_s.to_sym }
+    def cache
+      if (cache = Thread.current[CACHE_KEY]) != nil
+        cache[I18n.locale] ||= {}
+        cache[I18n.locale][@klass] ||= {}
+        cache[I18n.locale][@klass][@enum] ||= {}
+        cache[I18n.locale][@klass][@enum][@optons] ||= yield
+      else
+        yield
+      end
+    end
+
+    class << self
+      def cache
+        Thread.current[CACHE_KEY] = {}
+        yield
+      ensure
+        Thread.current[CACHE_KEY] = nil
+      end
+    end
+  end
+
+  class Lookup
+    def initialize(klass, enum, options = {})
+      @klass = klass
+      @enum = enum
+      @options = options
+    end
+
+    def call
+      i18n = lookup_for(@klass).transform_keys { |k| k.to_s.to_sym }
 
       dict = {}
       if @enum.setting[:accessor]
@@ -36,27 +66,19 @@ module EnumIsh
       filter(dict)
     end
 
-    def load_from_i18n
+    private
+
+    def lookup_for(klass)
       key = [@enum.name, @options[:format]].compact.join('/')
       options = (@options[:i18n_options] || {}).merge(default: nil)
-      dict = I18n.t(:"enum_ish.#{@klass.name.underscore}.#{key}", **options)
-      return dict if dict
 
-      i18n_ancestors.each do |ancestor|
-        dict = I18n.t(:"enum_ish.#{ancestor.name.underscore}.#{key}", **options)
-        return dict if dict
+      if klass.name.to_s.in?(['ActiveRecord::Base', 'Object'])
+        I18n.t(:"enum_ish.defaults.#{key}", **options) || @enum.mapping.invert
+      elsif klass.name.blank? || !klass.is_a?(Class)
+        resolve(klass.superclass)
+      else
+        I18n.t(:"enum_ish.#{klass.name.underscore}.#{key}", **options) || lookup_for(klass.superclass)
       end
-
-      dict = I18n.t(:"enum_ish.defaults.#{key}", **options)
-      return dict if dict
-
-      @enum.mapping.invert
-    end
-
-    def i18n_ancestors
-      @klass.ancestors.drop(1)
-            .take_while { |a| a.name != 'ActiveRecord::Base' && a.name != 'Object' }
-            .select { |a| a.is_a?(Class) && !a.name.empty? }
     end
 
     def filter(dict)
