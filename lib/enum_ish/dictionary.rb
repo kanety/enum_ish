@@ -30,7 +30,7 @@ module EnumIsh
         cache[I18n.locale] ||= {}
         cache[I18n.locale][@klass] ||= {}
         cache[I18n.locale][@klass][@enum] ||= {}
-        cache[I18n.locale][@klass][@enum][@optons] ||= yield
+        cache[I18n.locale][@klass][@enum][@options] ||= yield
       else
         yield
       end
