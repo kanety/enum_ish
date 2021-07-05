@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.5.0
+
+* Add dictionary cache feature.
+* Change module inclusion. Use 'include EnumIsh::Base' instead of 'extend EnumIsh'.
+* Move configuration method to `EnumIsh`. Use `EnumIsh.configure` instead of 'EnumIsh::Config.configure'.
+
 ## 1.4.1
 
 * Avoid overwrite of superclass's `_enum_ish_enums`.
