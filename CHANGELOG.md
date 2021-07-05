@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.1
+
+* Fix wrong cache lookup.
+
 ## 1.5.0
 
 * Add dictionary cache feature.
