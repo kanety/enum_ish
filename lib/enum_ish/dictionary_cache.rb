@@ -7,7 +7,7 @@ module EnumIsh
     end
   
     def call(env)
-      EnumIsh::Dictionary.cache do
+      EnumIsh::Dictionary.with_cache do
         @app.call(env)
       end
     end
