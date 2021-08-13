@@ -1,7 +1,8 @@
 describe EnumIsh::Definer do
   context 'no translations' do
     let(:model) {
-      test_model(UserModel) do
+      test_model(Class.new) do
+        include EnumIsh::Base
         attr_accessor :val
         enum_ish :value, ['val1', 'val2', 'val3']
       end
