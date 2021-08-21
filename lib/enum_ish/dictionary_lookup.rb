@@ -11,9 +11,9 @@ module EnumIsh
 
       dict = {}
       if @enum.setting[:accessor]
-        @enum.mapping.each { |k, v| dict[k] = i18n[k].to_s }
+        @enum.mapping.each { |k, v| dict[k] = i18n[k] }
       else
-        @enum.mapping.each { |k, v| dict[v] = i18n[k].to_s }
+        @enum.mapping.each { |k, v| dict[v] = i18n[k] }
       end
 
       filter(dict)
@@ -30,7 +30,7 @@ module EnumIsh
       options = (@options[:i18n_options] || {}).merge(default: nil)
 
       if klass.name.to_s.in?(['ActiveRecord::Base', 'Object'])
-        I18n.t(:"enum_ish.defaults.#{key}", **options) || @enum.mapping.invert
+        I18n.t(:"enum_ish.defaults.#{key}", **options) || @enum.mapping
       else
         I18n.t(:"enum_ish.#{klass.name.underscore}.#{key}", **options) || lookup_for(klass.superclass)
       end

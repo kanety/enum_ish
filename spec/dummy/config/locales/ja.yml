@@ -7,6 +7,9 @@ ja:
       status/short:
         enable: 有
         disable: 無
+      status/array:
+        enable: ['enable', '有効']
+        disable: ['disable', '無効']
       str:
         status1: 文字列１
         status2: 文字列２
@@ -20,17 +23,17 @@ ja:
         1: 整数1
         2: 整数2
       int/short:
-        0: 0
-        1: 1
-        2: 2
+        0: '0'
+        1: '1'
+        2: '2'
       flt:
         0.5: 0.5倍
         1.0: 1倍
         2.0: 2倍
       flt/short:
-        0.5: 0.5
-        1.0: 1
-        2.0: 2
+        0.5: '0.5'
+        1.0: '1'
+        2.0: '2'
       bool:
         true: 真
         false: 偽
