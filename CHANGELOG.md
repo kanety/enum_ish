@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.6.0
+
+* Add `EnumIsh.config.defaults` which allows to set default options for `enum_ish`.
+* Don't convert dictionary value to string.
+
 ## 1.5.1
 
 * Fix wrong cache lookup.
