@@ -9,7 +9,7 @@ module EnumIsh
     def initialize(name, mapping, setting)
       @name = name
       @mapping = init_mapping(mapping)
-      @setting = init_setting(setting)
+      @setting = setting
     end
 
     def to_raw(value)
@@ -41,13 +41,6 @@ module EnumIsh
       else
         mapping
       end
-    end
-
-    def init_setting(setting)
-      [:text, :options].each do |key|
-        setting[key] = true unless setting.key?(key)
-      end
-      setting
     end
   end
 end

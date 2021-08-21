@@ -5,6 +5,7 @@ module EnumIsh
     class_attribute :data
 
     self.data = {
+      defaults: { text: true, options: true },
       text_prefix: '',
       text_suffix: '_text',
       options_prefix: '',

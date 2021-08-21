@@ -14,8 +14,8 @@ module EnumIsh
     end
 
     class_methods do
-      def enum_ish(name, map, config = {})
-        enum = Enum.new(name, map, config)
+      def enum_ish(name, map, setting = {})
+        enum = Enum.new(name, map, Config.defaults.merge(setting))
         self._enum_ish_enums = _enum_ish_enums.merge(name.to_sym => enum)
 
         if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
