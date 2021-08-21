@@ -206,7 +206,7 @@ Rails.application.config.middleware.use EnumIsh::DictionaryCache
 ```
 
 This middleware enables dictionary cache for each request.
-Prformance of dictionary lookup will be improved in case one dictionary is used repeatedly in the same request.
+Performance of dictionary lookup will be improved in case one dictionary is used repeatedly in the same request.
 
 ## Contributing
 
