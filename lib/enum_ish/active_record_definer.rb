@@ -11,7 +11,7 @@ module EnumIsh
         after_initialize method
         define_method method do
           if respond_to?(enum.name) && public_send(enum.name).nil?
-            default = enum.setting[:default]
+            default = enum.default
             default = instance_exec(&default) if default.kind_of?(Proc)
             public_send("#{enum.name}=", default)
           end
@@ -21,7 +21,7 @@ module EnumIsh
 
     def define_accessor(enum)
       @klass.class_eval do
-        define_method "#{Config.raw_prefix}#{enum.name}#{Config.raw_suffix}" do
+        define_method enum.raw_method do
           value = read_attribute(enum.name)
           enum.mapping.fetch(value, value)
         end
@@ -40,10 +40,10 @@ module EnumIsh
 
     def define_scope(enum)
       @klass.class_eval do
-        scope "#{Config.scope_prefix}#{enum.name}#{Config.scope_suffix}", ->(*value) {
+        scope enum.scope_method, ->(*value) {
           where(enum.name => enum.mapping.fetch(value, value))
         }
-        scope "#{Config.scope_prefix}#{enum.name}_not#{Config.scope_suffix}", ->(*value) {
+        scope enum.scope_method(:negative), ->(*value) {
           where.not(enum.name => enum.mapping.fetch(value, value))
         }
       end

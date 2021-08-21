@@ -18,7 +18,7 @@ module EnumIsh
         enum = Enum.new(name, map, Config.defaults.merge(setting))
         self._enum_ish_enums = _enum_ish_enums.merge(name.to_sym => enum)
 
-        if defined?(ActiveRecord::Base) && self.ancestors.include?(ActiveRecord::Base)
+        if defined?(ActiveRecord::Base) && ancestors.include?(ActiveRecord::Base)
           ActiveRecordDefiner.new(self).define(enum)
         else
           Definer.new(self).define(enum)

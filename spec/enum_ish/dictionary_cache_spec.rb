@@ -1,6 +1,6 @@
 describe EnumIsh::DictionaryCache do
   it 'translates options' do
-    EnumIsh::Dictionary.with_cache do
+    EnumIsh::DictionaryCache.enable do
       expect(User.status_options).to eq([["有効", "enable"], ["無効", "disable"]])
       expect(User.status_options(format: :short)).to eq([["有", "enable"], ["無", "disable"]])
     end

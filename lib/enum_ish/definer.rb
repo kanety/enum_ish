@@ -7,8 +7,8 @@ module EnumIsh
     end
 
     def define(enum)
-      [:text, :options, :predicate, :default, :accessor, :validate, :scope].each do |type|
-        send("define_#{type}", enum) if enum.setting[type]
+      enum.features.each do |feature|
+        send("define_#{feature}", enum)
       end
     end
 
@@ -16,7 +16,7 @@ module EnumIsh
 
     def define_text(enum)
       @klass.class_eval do
-        define_method "#{Config.text_prefix}#{enum.name}#{Config.text_suffix}" do |options = {}|
+        define_method enum.text_method do |options = {}|
           dict = Dictionary.new(self.class, enum, options)
           dict.translate_value(public_send(enum.name))
         end
@@ -25,7 +25,7 @@ module EnumIsh
 
     def define_options(enum)
       @klass.class_eval do
-        define_singleton_method "#{Config.options_prefix}#{enum.name}#{Config.options_suffix}" do |options = {}|
+        define_singleton_method enum.options_method do |options = {}|
           dict = Dictionary.new(self, enum, options)
           dict.translate_options
         end
@@ -33,24 +33,14 @@ module EnumIsh
     end
 
     def define_predicate(enum)
-      enum.mapping.each do |enum_key, enum_value|
-        method_name = if enum.setting[:predicate].is_a?(Hash) && enum.setting[:predicate][:prefix] == false
-          "#{enum_key}?"
-        else
-          "#{enum.name}_#{enum_key}?"
-        end
-        target_value = if enum.setting[:accessor]
-          enum_key
-        else
-          enum_value
-        end
+      enum.mapping.keys.each do |key|
         @klass.class_eval do
-          define_method method_name.tr('.', '_') do
+          define_method enum.predicate_method(key) do
             value = public_send(enum.name)
             if value.is_a?(Array)
-              value == [target_value]
+              value == [enum.value(key)]
             else
-              value == target_value
+              value == enum.value(key)
             end
           end
         end
@@ -63,7 +53,7 @@ module EnumIsh
         define_method :initialize do |*args|
           super(*args)
           if respond_to?(enum.name) && public_send(enum.name).nil?
-            default = enum.setting[:default]
+            default = enum.default
             default = instance_exec(&default) if default.kind_of?(Proc)
             public_send("#{enum.name}=", default)
           end
@@ -74,7 +64,7 @@ module EnumIsh
 
     def define_accessor(enum)
       @klass.class_eval do
-        define_method "#{Config.raw_prefix}#{enum.name}#{Config.raw_suffix}" do
+        define_method enum.raw_method do
           instance_variable_get("@#{enum.name}")
         end
         define_method "#{enum.name}" do
@@ -87,13 +77,8 @@ module EnumIsh
     end
 
     def define_validate(enum)
-      targets = if enum.setting[:accessor]
-        enum.mapping.keys
-      else
-        enum.mapping.values
-      end
       @klass.class_eval do
-        validates enum.name, inclusion: { in: targets }, allow_nil: true
+        validates enum.name, inclusion: { in: enum.values }, allow_nil: true
       end
     end
 

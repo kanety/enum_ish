@@ -11,10 +11,10 @@ describe 'dictionary cache benchmark' do
           n.times { user.status_text }
         end
         x.report("with cache (0% hit)") do
-          n.times { EnumIsh::Dictionary.with_cache { user.status_text } }
+          n.times { EnumIsh::DictionaryCache.enable { user.status_text } }
         end
         x.report("with cache (100% hit)") do
-          EnumIsh::Dictionary.with_cache { n.times { user.status_text } }
+          EnumIsh::DictionaryCache.enable { n.times { user.status_text } }
         end
       end
     end
@@ -28,10 +28,10 @@ describe 'dictionary cache benchmark' do
           n.times { User.status_options }
         end
         x.report("with cache (0% hit)") do
-          n.times { EnumIsh::Dictionary.with_cache { User.status_options } }
+          n.times { EnumIsh::DictionaryCache.enable { User.status_options } }
         end
         x.report("with cache (100% hit)") do
-          EnumIsh::Dictionary.with_cache { n.times { User.status_options } }
+          EnumIsh::DictionaryCache.enable { n.times { User.status_options } }
         end
       end
     end

@@ -10,7 +10,7 @@ module EnumIsh
       i18n = lookup_for(@klass).transform_keys { |k| k.to_s.to_sym }
 
       dict = {}
-      if @enum.setting[:accessor]
+      if @enum.use?(:accessor)
         @enum.mapping.each { |k, v| dict[k] = i18n[k] }
       else
         @enum.mapping.each { |k, v| dict[v] = i18n[k] }
