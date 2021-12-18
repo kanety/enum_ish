@@ -26,14 +26,18 @@ module EnumIsh
           enum.mapping.fetch(value, value)
         end
 
-        args =
-          if ActiveRecord.version > Gem::Version.new('6.1.0.a')
-            [enum.name]
-          else
-            [enum.name, :enum]
+        if ActiveRecord.version > Gem::Version.new('7.0.0.a')
+          attribute(enum.name) do |subtype|
+            EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
           end
-        decorate_attribute_type(*args) do |subtype|
-          EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
+        elsif ActiveRecord.version > Gem::Version.new('6.1.0.a')
+          decorate_attribute_type(enum.name) do |subtype|
+            EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
+          end
+        else
+          decorate_attribute_type(enum.name, :enum) do |subtype|
+            EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
+          end
         end
       end
     end
