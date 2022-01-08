@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.1
+
+* Support activerecord 7.0.
+
 ## 1.6.0
 
 * Add `EnumIsh.config.defaults` which allows to set default options for `enum_ish`.
