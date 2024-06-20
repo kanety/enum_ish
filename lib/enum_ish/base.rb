@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'enum'
 require_relative 'dictionary'
 require_relative 'errors'
