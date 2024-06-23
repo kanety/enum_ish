@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.2
+
+* Add `frozen_string_literal: true`.
+
 ## 1.6.1
 
 * Support activerecord 7.0.
