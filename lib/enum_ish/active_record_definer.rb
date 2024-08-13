@@ -26,7 +26,11 @@ module EnumIsh
           enum.mapping.fetch(value, value)
         end
 
-        if ActiveRecord.version > Gem::Version.new('7.0.0.a')
+        if ActiveRecord.version >= Gem::Version.new('7.2.0.a')
+          decorate_attributes([enum.name]) do |_, subtype|
+            EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
+          end
+        elsif ActiveRecord.version > Gem::Version.new('7.0.0.a')
           attribute(enum.name) do |subtype|
             EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
           end
