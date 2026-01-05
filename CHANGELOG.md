@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.0
+
+* Drop support for ruby <= 2.7, rails <= 6.1.
+
 ## 1.6.3
 
 * Support activerecord 7.2.
