@@ -4,9 +4,9 @@ A ruby and rails extension to generate enum-like methods.
 
 ## Dependencies
 
-* ruby 2.3+
-* activerecord 5.0+
-* activesupport 5.0+
+* ruby 3.0+
+* activerecord 7.0+
+* activesupport 7.0+
 
 ## Installation
 

@@ -30,16 +30,8 @@ module EnumIsh
           decorate_attributes([enum.name]) do |_, subtype|
             EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
           end
-        elsif ActiveRecord.version > Gem::Version.new('7.0.0.a')
-          attribute(enum.name) do |subtype|
-            EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
-          end
-        elsif ActiveRecord.version > Gem::Version.new('6.1.0.a')
-          decorate_attribute_type(enum.name) do |subtype|
-            EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
-          end
         else
-          decorate_attribute_type(enum.name, :enum) do |subtype|
+          attribute(enum.name) do |subtype|
             EnumIsh::ActiveRecordEnumType.new(enum.name, enum.mapping, subtype)
           end
         end
